@@ -1,0 +1,93 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top" style="z-index: 900;">
+  <div class="container-fluid" style="margin: 0 25px; padding: 0 15px;">
+
+    <!-- <img src="assets/placeholder.jpg"> -->
+    <a class="navbar-brand" href="#">
+      <img [src]="timeTrackerLogo()" alt="logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user fa-fw" aria-hidden="true"></i> {{ userInfo?.data?.userName }}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="margin-top: 9px;">
+            <!--
+             <a class="dropdown-item" href="#">
+                 <i class="fa fa-key fa-fw"></i>&nbsp; Change Password
+             </a>
+
+             <a class="dropdown-item" href="#">
+                 <i class="fa fa-lock fa-fw"></i>&nbsp; Admin Panel
+             </a>
+             -->
+            <a class="dropdown-item" href="#">
+              <i class="fa fa-download fa-fw"></i>&nbsp; Download App
+            </a>
+            <a class="dropdown-item" href="/#/leave-application" target="_blank">
+              <i class="fa fa-external-link fa-fw"></i>&nbsp; Leave Management
+            </a>
+            <a class="dropdown-item" href="/#/leave-calendar" target="_blank">
+              <i class="fa fa-external-link fa-fw"></i> Leave Calendar
+            </a>
+            <a class="dropdown-item" href="#" (click)="logout()">
+              <i class="fa fa-sign-out fa-fw"></i>&nbsp; Log out
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!--
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <div class="" style="margin: 0 25px; padding: 0 15px;">
+            <div class="navbar-header">
+                <a class="navbar-brand" ui-sref="report">
+                    Time Tracker
+                </a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right mr-auto">
+                    <li dropdown class="user-dropdown-box">
+                        <a class="dropdown-toggle" dropdown-toggle>
+                            <i class="fa fa-user" style="color: #fff; margin-right: 4px;"></i>UserInfo.UserName
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu user-dropdown flat">
+                            <li>
+                                <a ng-click="openChangePasswordModal()">
+                                    <i class="fa fa-key"></i> Change Password
+                                </a>
+                            </li>
+                            <li ng-if="rootScope.UserInfo.IsAdmin">
+                                <a ui-sref="admin">
+                                    <i class="fa fa-key"></i> Admin Panel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-download"></i> Download App
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="logout()">
+                                    <i class="fa fa-sign-out"></i> Log out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+-->

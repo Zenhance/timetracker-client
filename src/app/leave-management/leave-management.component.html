@@ -1,0 +1,101 @@
+<tt-header></tt-header>
+<div class="applicationForm-container">
+<ul ngbNav #nav="ngbNav"  class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink (click)="onClickNotificationTab(nav)">Notifications</a>
+    <ng-template ngbNavContent>
+      <div *ngIf="loading" class="loading-spinner" style="margin-top: 255px;">
+        <i class="fa fa-cog fa-spin fa-5x fa-fw"></i>
+        <p style="color: #212529">Loading Notifications...</p>
+      </div>
+      <div *ngIf="!loading">
+        <ul class="list-group" *ngIf="notifications.length > 0">
+          <li class="list-group-item notification-text"
+              *ngFor="let notification of notifications"
+              (click)="onClickNotification(notification, nav)">
+          <span [ngClass]="{'notification-text-accept': (notification.reviewMessage !== 'Not Approved' && notification.reviewMessage !== 'Rejected'), 'notification-text-reject' : (notification.reviewMessage === 'Not Approved' || notification.reviewMessage === 'Rejected') }">
+              {{notification.notificationMessage}}
+            </span>
+          </li>
+        </ul>
+        <ul class="list-group" *ngIf="notifications.length <= 0">
+          <li class="list-group-item">
+            <i class="text-center ml-auto">No Notification to show </i>
+          </li>
+        </ul>
+      </div>
+
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink (click)="onClickApplicationSubmitTab(nav)">Submit Leave Application</a>
+    <ng-template ngbNavContent>
+      <tt-leave-application [editable] = 'true' (submitted)="onSubmitSuccess($event, nav)"></tt-leave-application>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="3" *ngIf="activeNavSet.submitted">
+    <a ngbNavLink>Submitted</a>
+    <ng-template ngbNavContent>
+      <tt-leave-resubmit-form
+        [notification]="selectedNotification"
+        [projectList] = "projectList"
+        (emittedCancelValue) = "onCancelValueEmit($event, nav)"></tt-leave-resubmit-form>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="4" *ngIf="activeNavSet.review">
+    <a ngbNavLink>Review</a>
+    <ng-template ngbNavContent class="ml-2">
+      <tt-leave-review-form
+        [notification]="selectedNotification"
+        [projectList]="projectList"
+        (reviewedByManagement)="onManagementReview($event, nav)"
+        (reviewed)="onReviewComplete($event, nav)">
+
+      </tt-leave-review-form>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="5" *ngIf="activeNavSet.resubmit">
+    <a ngbNavLink>Resubmit</a>
+    <ng-template ngbNavContent>
+      <tt-leave-resubmit-form [notification]="selectedNotification"
+                              (emittedResubmitValue)="onResubmitValueEmit($event)"
+                              (emittedCancelValue)="onCancelValueEmit($event, nav)"></tt-leave-resubmit-form>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="6" *ngIf="activeNavSet.approved">
+    <a ngbNavLink>Approved</a>
+    <ng-template ngbNavContent>
+      <tt-leave-review-form
+        [notification]="selectedNotification"
+        [projectList]="projectList"
+        (reviewedByManagement)="onManagementReview($event, nav)"
+        (reviewed)="onReviewComplete($event, nav)">
+
+      </tt-leave-review-form>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="7" *ngIf="activeNavSet.rejected">
+    <a ngbNavLink>Rejected Application</a>
+    <ng-template ngbNavContent>
+      <tt-leave-review-form
+        [notification]="selectedNotification"
+        [projectList]="projectList">
+      </tt-leave-review-form>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="8" *ngIf="activeNavSet.manuallyCancelled">
+    <a ngbNavLink>Manually Cancelled</a>
+    <ng-template ngbNavContent>
+      <tt-leave-review-form
+        [notification]="selectedNotification"
+        [projectList]="projectList"
+        (reviewedByManagement)="onManagementReview($event, nav)">
+      </tt-leave-review-form>
+    </ng-template>
+  </li>
+
+</ul>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+
+

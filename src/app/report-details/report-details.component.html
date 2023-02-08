@@ -1,0 +1,204 @@
+<tt-header></tt-header>
+<div class="report-details-view" style="margin-top: 70px;">
+    <div class="option-panel">
+        <div class="row" style="padding-bottom: 20px;">
+            <div class="col-6 d-flex justify-content-start">
+                <div class="btn-group" style="display: inline-block">
+                    <span style="font-weight: bold;">From &nbsp;</span>
+                    <input type="hidden" 
+                           firstDayOfWeek="7"
+                           placeholder="yyyy-mm-dd"
+                           name="dF" 
+                           [(ngModel)]="fromDateModel" 
+                           ngbDatepicker 
+                           (dateSelect)="setFromDate()" 
+                           #dF="ngbDatepicker">
+                    <button class="btn btn-outline-secondary calendar" (click)="dF.toggle()" type="button">
+                        <i class="fa fa-calendar fa-fw"></i> {{ selectedFromDate }}
+                    </button>
+                </div>&nbsp;
+                <div class="btn-group" style="display: inline-block">
+                    <span style="font-weight: bold;">To &nbsp;</span>
+                    <input type="hidden"
+                           firstDayOfWeek="7"
+                           placeholder="yyyy-mm-dd"
+                           name="dT" 
+                           [(ngModel)]="toDateModel" 
+                           ngbDatepicker 
+                           (dateSelect)="setToDate()" 
+                           #dT="ngbDatepicker">
+                    <button class="btn btn-outline-secondary calendar" (click)="dT.toggle()" type="button">
+                        <i class="fa fa-calendar fa-fw"></i> {{ selectedToDate }}
+                    </button>
+                </div>&nbsp;
+                <div class="" style="display: inline-block">
+                    <button type="button" class="btn btn-light border" (click)="refreshData()">
+                        Go
+                    </button>
+                </div>
+            </div>
+            <div class="col-6 d-flex justify-content-end option-buttons">
+                <select *ngIf="isAdmin" class="custom-select" style="display: inline-block;"
+                    [(ngModel)]="selectedUser" (change)="refreshData()">
+                    <option selected="true" value="self">SELF</option>
+                    <option *ngFor="let item of usersList?.data" [value]="item.email">{{ item.name }}</option>
+                </select>
+                <a style="margin-left: 5px;" class="btn btn-light border" (click)="backToAdminWorkDiary()">Back To Work Diary</a>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 10px;">
+            <div class="col-12"> 
+                <nav>
+                    <div class="nav nav-tabs" style="font-weight: bold; margin-bottom: 20px;" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-report-tab" data-toggle="tab" href="#nav-report" role="tab" aria-controls="nav-report" aria-selected="true">Report</a>
+                      <a class="nav-item nav-link" id="nav-charts-tab" data-toggle="tab" href="#nav-charts" role="tab" aria-controls="nav-charts" aria-selected="false">Charts</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner" style="margin-top: 255px;">
+        <i class="fa fa-cog fa-spin fa-5x fa-fw"></i>
+        <p style="color: #212529">Loading Reports...</p>
+    </div>
+    <div *ngIf="!loading" class="tab-content" id="nav-tabContent" style="margin-top: 220px;">
+        <div class="tab-pane fade show active" id="nav-report" role="tabpanel" aria-labelledby="nav-report-tab">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-12 d-flex justify-content-start">
+                    <div class="info-badge-container" style="padding-left: 25px;">
+                        <ul class="nav nav-pills">
+                            <li class="label-primary">
+                                <h6 class="info-badge">
+                                    Total Time Spent: 
+                                    <span class="badge badge-primary" style="font-size: 1.5em; margin-right: 5px;">
+                                        {{ dateTimeService.getHourMinuteFormatFromMinutes(totalTimeSpent) }}
+                                    </span>
+                                    <small style="font-weight: bold; margin-right: 10px;">(hrs)</small>
+                                    <span class="badge badge-success" style="font-size: 1.5em; margin-right: 5px;">
+                                        {{ dateTimeService.timeStringToDecimal(dateTimeService.getHourMinuteFormatFromMinutes(totalTimeSpent)) }}
+                                    </span>
+                                    <small style="font-weight: bold; margin-right: 10px;">(dec)</small>
+                                </h6>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="custom-control custom-checkbox" style="margin-top: 18px; margin-left: 20px;">
+                        <input type="checkbox" [(ngModel)]="summaryView" (click)="summaryViewChange()" class="custom-control-input" id="summview">
+                        <label class="custom-control-label" for="summview">Summarized</label>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!summaryView" class="ho-table-box">
+                <hot-table class="hot"
+                        [data]="reportDetailsData"
+                        [colWidths]="[200, 200, 150, 150, 200]"
+                        [mergeCells]="mergeCells"
+                        [afterRender]="true"
+                        licenseKey="non-commercial-and-evaluation">
+                    <div *ngFor="let col of tableDef">
+                        <hot-column [type]="'text'" 
+                                    [readOnly]="true"
+                                    data="{{ col.data }}" 
+                                    title="{{ col.title }}">
+                        </hot-column>
+                    </div>
+                </hot-table>
+            </div>
+            <div *ngIf="summaryView" class="ho-table-box">
+                <hot-table class="hot"
+                        [data]="summarizedReportData"
+                        [colWidths]="[200, 200, 200]"
+                        [afterRender]="true"
+                        licenseKey="non-commercial-and-evaluation">
+                    <div *ngFor="let col of tableDef">
+                        <hot-column [type]="'text'" 
+                                    [readOnly]="true"
+                                    data="{{ col.data }}" 
+                                    title="{{ col.title }}">
+                        </hot-column>
+                    </div>
+                </hot-table>
+            </div> 
+        </div>
+        <div class="tab-pane fade" style="margin: 10px 25px;" id="nav-charts" role="tabpanel" aria-labelledby="nav-charts-tab">
+            <div class="row" style="margin-bottom: 20px">
+                <div class="col-12">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            Task Engagement
+                        </div>
+                        <div class="card-body">
+                            <div *ngIf="chartData.engagement">
+                                <div style="text-align: left; padding-left: 8px; margin-bottom: 20px;">
+                                    <b>Job Day: &nbsp;</b>
+                                    <select [(ngModel)] = "chartData.engagement.selectedJobDate"
+                                                (change)="buildTaskEngagementChart()"
+                                                class="custom-select">
+                                            <option *ngFor="let jd of chartData.engagement.jobdays" 
+                                                    [value]="jd.dateISO"> 
+                                                {{ jd.date }}
+                                            </option>
+                                    </select>
+                                </div>
+                                <div class="chart">
+                                    <div style="display: block; height: 300px;">
+                                      <canvas baseChart
+                                      [data]="chartData.engagement.data"
+                                      [labels]="chartData.engagement.labels"
+                                      [chartType]="chartData.engagement.type"
+                                      [options]="chartData.engagement.options">
+                                      </canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>
+            <div class="row">               
+                <div class="col-md-6 col-sm-12">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            Activity Level
+                        </div>
+                        <div class="card-body">
+                            <p><small><b>
+                                {{selectedFromDate}} - {{selectedToDate}}
+                            </b></small></p>
+                            <div class="chart" *ngIf="chartData.activity">
+                                <canvas baseChart
+                                    [data]="chartData.activity.data"
+                                    [labels]="chartData.activity.labels"
+                                    [chartType]="chartData.activity.type"
+                                    [options]="chartData.options">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            Entry Type
+                        </div>
+                        <div class="card-body">
+                            <p><small><b>
+                                {{selectedFromDate}} - {{selectedToDate}}
+                            </b></small></p>
+                            <div class="chart" *ngIf="chartData.entrytype">
+                                <canvas baseChart
+                                    [data]="chartData.entrytype.data"
+                                    [labels]="chartData.entrytype.labels"
+                                    [chartType]="chartData.entrytype.type"
+                                    [options]="chartData.options">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

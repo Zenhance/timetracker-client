@@ -1,0 +1,9 @@
+.time-slot-size{
+    height: 180px;
+    min-height: 170px;
+    width: 100%;
+}
+.col-1.time-slot-size.fix-slot-size {
+    padding-left: 2px;
+    padding-right: 3px;
+}

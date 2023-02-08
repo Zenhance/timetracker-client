@@ -1,0 +1,188 @@
+<tt-header></tt-header>
+<div class="option-panel">
+    <div class="row" style="padding-bottom: 20px;">
+        <div class="col-6 d-flex justify-content-start">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary" [disabled]="loading" (click)="navigate(1)">
+                    <i class="fa fa-angle-left fa-lg" aria-hidden="true"></i>
+                </button>
+    
+                <input type="hidden" 
+                       placeholder="yyyy-mm-dd"
+                       firstDayOfWeek="7"
+                       name="dp" 
+                       [(ngModel)]="model" 
+                       ngbDatepicker 
+                       [footerTemplate]="footerTemplate"
+                       (dateSelect)="reloadWorkDiary()" 
+                       #d="ngbDatepicker">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button" [disabled]="loading">
+                    <i class="fa fa-calendar fa-fw"></i> {{ selectedDate }}
+                </button>
+    
+                <button type="button" class="btn btn-outline-secondary" (click)="navigate(-1)" [disabled]="loading">
+                    <i class="fa fa-angle-right fa-lg" aria-hidden="true"></i>
+                </button>
+                
+                <ng-template #footerTemplate>
+                    <hr class="my-0">
+                    <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; reloadWorkDiary(); d.close()">Today</button>
+                    <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Close</button>
+                </ng-template>
+            </div>
+    
+            <select *ngIf="usersList?.data?.length" class="custom-select" style="margin-left: 10px; display: inline-block; "
+                [(ngModel)]="selectedUser" (change)="reloadWorkDiary()">
+                <option value="self">SELF</option>
+                <option *ngFor="let item of usersList?.data" [value]="item.email">{{ item.name }}</option>
+            </select>
+    
+        </div>
+        <div class="col-6 d-flex justify-content-end option-buttons">
+            <button class="btn btn-light border" (click)="gotoReportDetails()">Details</button>
+            <button class="btn btn-light border" *ngIf="isOwner" (click)="openEditMemoModal()" [disabled]="!isEditMemoEnabled()">Edit Memo</button>
+            <button class="btn btn-light border" *ngIf="isOwner" (click)="openDeleteSlotModal()" [disabled]="!getSelectedSlotIds().length || submitStatus?.isSubmitted">Delete</button>
+            <div class="btn-group" *ngIf="isOwner">
+                <button type="button" 
+                        class="btn btn-light border dropdown-toggle" 
+                        style="margin-left: 5px;" 
+                        data-toggle="dropdown" 
+                        aria-haspopup="true" 
+                        aria-expanded="false">
+                  Actions
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" (click)="toggleSubmitStatus()">{{ submitStatus?.isSubmitted ? 'Retract' : 'Submit' }}</button>
+                    <button class="dropdown-item" (click)="openManualEntryModal()" *ngIf="isOwner" [disabled]="submitStatus?.isSubmitted">Manual Entry</button>
+                    <button class="dropdown-item" (click)="deselectAllSlots()" [disabled]="!getSelectedSlotIds().length">Deselect All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-bottom: 20px;">
+        <div class="col-9 d-flex justify-content-start info-badge-container">
+            <ul class="nav nav-pills">
+                <li class="label-primary">
+                    <h6 class="info-badge">
+                        <span *ngIf="timeCount" class="badge badge-primary" style="font-size: 1.5em;">
+                           {{ timeCount.totalTime }} 
+                        </span>
+                        <span *ngIf="!timeCount" class="badge badge-primary" style="font-size: 1.5em;">
+                            0:00 
+                        </span>
+                        Total Time
+                    </h6>
+                </li>
+                <li>
+                    <h6 class="info-badge">
+                        <span *ngIf="timeCount" class="badge badge-success" style="font-size: 1.5em;">
+                            {{ timeCount.autoEntryWorkTime }}
+                        </span>
+                        <span *ngIf="!timeCount" class="badge badge-success" style="font-size: 1.5em;">
+                            0:00 
+                        </span>
+                        Auto Entry Time
+                    </h6>
+                </li>
+                <li>
+                    <h6 class="info-badge">
+                        <span *ngIf="timeCount" class="badge badge-warning" style="font-size: 1.5em;">
+                            {{ timeCount.manualWorkTime }}
+                        </span>
+                        <span *ngIf="!timeCount" class="badge badge-warning" style="font-size: 1.5em;">
+                            0:00 
+                        </span>
+                        Manual Work Time
+                    </h6>
+                </li>
+            </ul>
+        </div>
+        <div class="col-3 d-flex justify-content-end">
+            <div style="padding-top: 20px;">
+                <h6 style="color: #212529">Status: 
+                    <span class="badge badge-pill badge-danger" *ngIf="!submitStatus?.isSubmitted">Not Submitted</span>
+                    <span class="badge badge-pill badge-success" *ngIf="submitStatus?.isSubmitted">Submitted</span>
+                </h6>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-bottom: 10px;">
+        <div class="col-6 d-flex justify-content-start"> 
+            <div class="custom-control custom-switch" style="padding-top: 5px; margin-right: 10px;">
+                <input [(ngModel)]="loadImages" type="checkbox" class="custom-control-input" (click)="toggleLoadImages()" [disabled]="!isImageToggleButtonEnabled()" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1">Show Images</label>
+            </div>
+            <button *ngIf="isOwner" type="button" class="btn btn-link" (click)="openProjectAssignmentModal()" [disabled]="loading" style="text-decoration: none;">
+                <i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>&nbsp;Assign Projects
+            </button>
+            <button *ngIf="isOwner" type="button" class="btn btn-link" (click)="addToHourPad()" [disabled]="loading" style="text-decoration: none;">
+                <i class="fa fa-share-square-o fa-fw" aria-hidden="true"></i>&nbsp;Add To HourPad
+            </button>
+            <button type="button" class="btn btn-link" (click)="loadWorkDiary()" style="text-decoration: none;">
+                <i class="fa fa-refresh fa-fw" aria-hidden="true"></i>&nbsp;Refresh
+            </button>
+        </div>
+        <div class="col-6 d-flex justify-content-end"> 
+            <input [(ngModel)]="searchBoxValue" 
+                   (keypress)="filterWorkDiary()" 
+                   (keyup.backspace)="filterWorkDiary()" 
+                   class="form-control" 
+                   type="text" 
+                   placeholder="Search by task title..." />
+        </div>
+    </div>
+</div> 
+<div class="report-view"> 
+    <div class="table-container" style="margin-top: 255px;">
+        <div *ngIf="loading" class="loading-spinner">
+            <i class="fa fa-cog fa-spin fa-5x fa-fw"></i>
+            <p style="color: #212529">Loading Work Diary...</p>
+        </div>
+        <div *ngIf="!loading && hourlyData.length === 0" class="loading-spinner">
+            <h4 style="color: #212529; margin-top: 20px;">No entries found</h4>
+        </div>
+        <table *ngIf="!loading" class="table report-table">
+            <tbody>
+            <tr *ngFor="let row of hourlyData" class="time-row">
+                <td class="diary-hour">
+                    <div>
+                        {{ row.hour | date:'h a'}}<br/><!--+ gmtDifference -->
+    
+                        <label>
+                            <input type="checkbox" *ngIf="isOwner" [(ngModel)]="row.HourSelected" (change)="hourSelected(row)">
+                        </label>
+                    </div>
+                </td>
+                <td style="padding-left: 20px; padding-right: 25px;">
+                    <div class="row">
+                        <div *ngFor="let slot of row.slots" class="col-1 time-slot-size fix-slot-size">
+                                <div class="diary-title-holder" [ngClass]="{'title-found': slot.entryType === 'Automatic', 'manual-entry' : slot.entryType === 'Manual'}">
+                                    <span>{{ slot.jobTitle || "" }}</span>
+                                </div>
+                                <div class="screenshot-holder" [ngClass]="slot.screenshotUrl ? 'screenshot-found': 'no-screenshot-found'">
+                                    <img class="screenshot-thumbnail img-full-container" *ngIf="slot.screenshotUrl"
+                                         [src]="screenShotImage(slot)" (click)="openLargeScreenshotModal(slot)" /><!--{{ slot.ScreenshotUrl }}-->
+                                </div>
+                                <div class="diary-details">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input class="pull-left" *ngIf="!slot.IsEmpty && isOwner" type="checkbox" [(ngModel)]="slot.SlotSelected">
+                                            <input class="pull-left" *ngIf="slot.IsEmpty && isOwner" type="checkbox" [(ngModel)]="slot.SlotSelected" (change)="getEmptySelectedSlots()">
+                                            <span class="pull-left">{{ slot.slotStartTime | date:'h:mm a' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-horizontal slot-minute-list" *ngIf="slot.entryType !== 'Manual'">
+                                        <div class="slot-minute-box" *ngFor="let minute of getMinutesPerSlotArray(); let i = index" 
+                                             [ngClass]="slot.usedMinutes && ((i + 1) <= slot.usedMinutes) ? 'slot-minute-used' : ''">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>

@@ -1,0 +1,162 @@
+<div *ngIf="loading" class="loading-spinner" style="margin-top: 255px;">
+  <i class="fa fa-cog fa-spin fa-5x fa-fw"></i>
+  <p style="color: #212529">Loading...</p>
+</div>
+<div *ngIf="!loading">
+  <div class="applicationForm-container" *ngIf="leaveApplicationData">
+    <!--  <div class="form-header">-->
+    <!--    Leave Application-->
+    <!--  </div>-->
+    <div class=" mb-3 pl-5">
+      <div *ngIf="notification.role === 'substitute'">
+        <button *ngIf="notification.reviewMessage === 'Pending'" class="btn btn-sm btn-info mr-1" (click)="onAccept()">
+          Accept
+        </button>
+        <button *ngIf="notification.reviewMessage === 'Pending'" class="btn btn-sm btn-warning" (click)="onReject()">
+          Reject
+        </button>
+      </div>
+      <div *ngIf="notification.role === 'project_manager'">
+        <button *ngIf="notification.reviewMessage === 'Pending'" class="btn btn-sm btn-primary mr-1" (click)="onAccept()">
+          Approve
+        </button>
+        <button *ngIf="notification.reviewMessage === 'Pending'" class="btn btn-sm btn-danger" (click)="onReject()">
+          Disapprove
+        </button>
+      </div>
+      <div *ngIf="notification.role === 'admin'">
+        <button *ngIf="leaveApplicationData.activeStatus && notification.reviewMessage === 'Pending'" class="btn btn-sm btn-primary mr-1" (click)="onApprove()">
+          Approve
+        </button>
+        <button *ngIf="leaveApplicationData.activeStatus && notification.reviewMessage === 'Pending'" class="btn btn-sm btn-danger" (click)="onDisapprove()">
+          Disapprove
+        </button>
+
+      </div>
+      <div *ngIf="notification.role === 'issuer'">
+        <b *ngIf="leaveApplicationData.activeStatus===false" class="review-status-reject">Rejected Application</b>
+      </div>
+    </div>
+
+    <div class=" mb-3 pl-5" *ngIf="notification.reviewMessage === 'Approved'">
+      <b
+        [ngClass]="{'review-status-accept': (notification.reviewMessage !== 'Not Approved' && notification.reviewMessage !== 'Rejected'),
+        'review-status-reject' : (notification.reviewMessage === 'Not Approved' || notification.reviewMessage === 'Rejected') }">
+        {{notification.reviewMessage}}
+      </b>
+      <button
+        *ngIf="notification.role === 'admin' && notification.reviewMessage === 'Approved' && notification.actionState === 'approved'"
+        (click)="downloadPdf(pdf)"
+        class="btn btn-warning">
+        <i class="fa fa-file-pdf-o"></i> PDF
+      </button>
+      <button *ngIf="notification.role === 'admin' && notification.reviewMessage === 'Approved' && notification.actionState === 'approved'"
+              (click)="manuallyCancelApprovedLeave(notification)"
+              class="btn btn-danger"
+              style="margin-left: 8px">
+        <b>Cancel Approved Leave</b>
+      </button>
+    </div>
+
+    <div class="row mb-3 pl-5" *ngIf="notification.reviewMessage === 'Manually Cancelled After Approval'">
+      <b class="w-100 text-center alert alert-info">
+        {{notification.reviewMessage}}
+      </b>
+    </div>
+
+    <div id="pdf-section" #pdf class="pl-5 pr-5">
+      <div class="form-content">
+        <div class="row">
+          <div class="col-md-4">
+            <div><b style="padding-right: 4px">Name: </b> {{this.leaveApplicationData.name}} </div>
+            <div><b style="padding-right: 4px">Employee ID: </b> {{this.leaveApplicationData.employeeId}} </div>
+            <div><b style="padding-right: 4px">Designation: </b> {{this.leaveApplicationData.designation}} </div>
+            <div><b style="padding-right: 4px">Mobile: </b> {{this.leaveApplicationData.mobile}} </div>
+          </div>
+          <div class="col-md-4">
+            <div><b style="padding-right: 4px">Leave Start Date: </b> {{this.leaveApplicationData.leaveStartDate| date}}
+            </div>
+            <div><b style="padding-right: 4px">Leave End Date: </b> {{this.leaveApplicationData.leaveEndDate| date}}
+            </div>
+            <div><b style="padding-right: 4px">No of Days: </b> {{this.leaveApplicationData.leaveDayCount}} </div>
+            <div><b style="padding-right: 4px">Rejoin Date: </b> {{this.leaveApplicationData.rejoinDate| date}} </div>
+          </div>
+          <div class="col-md-4">
+            <div><b style="padding-right: 4px">Purpose of Leave: </b> {{this.leaveApplicationData.leavePurpose}} </div>
+            <div><b style="padding-right: 4px">Out of Station: </b> {{getOutOfStation()}} </div>
+            <div><b style="padding-right: 4px">Location: </b> {{this.leaveApplicationData.location}} </div>
+          </div>
+        </div>
+        <table class="table table-striped mt-3">
+          <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Responsibility</th>
+            <th>Substitute</th>
+            <th>Project Manager</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of this.leaveApplicationData.projectDetails">
+            <td>
+              <span *ngIf="projectList">{{getProjectName(item.project)}}</span>
+            </td>
+            <td>
+              {{item.responsibility}}
+            </td>
+            <td>
+              <span style="margin-right: 5px">{{item.substituteName }}</span>
+              <span *ngIf="item.substituteApprovalStatus=='Pending'"
+                    class="badge badge-secondary">Pending</span>
+              <span *ngIf="item.substituteApprovalStatus=='Accepted'"
+                    class="badge badge-success">Accepted</span>
+              <span *ngIf="item.substituteApprovalStatus=='Rejected'"
+                    class="badge badge-danger">Rejected</span>
+            </td>
+            <td>
+              <span style="margin-right: 5px">{{item.projectManagerName}}</span>
+              <span *ngIf="item.projectManagerApprovalStatus=='Pending'"
+                    class="badge badge-secondary">Pending</span>
+              <span *ngIf="item.projectManagerApprovalStatus=='Accepted' "
+                    class="badge badge-success">Accepted</span>
+              <span *ngIf="item.projectManagerApprovalStatus=='Rejected'"
+                    class="badge badge-danger">Rejected</span>
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+      <div *ngIf="notification.role === 'admin' && notification.reviewMessage === 'Pending' && !isApprovedByManagement && leaveApplicationData.activeStatus">
+        <hr style="border: 1px solid #1e8aff">
+        <p class="mt-2"><b>To be completed by office management</b></p>
+        <p class="mt-2" style="color: #456e37"><b>Type of Leave:</b></p>
+        <form [formGroup]="leaveApprovalForm">
+      <span *ngFor="let leaveType of leaveTypes; let i = index">
+        <input type="radio" [value]="leaveType.id" formControlName="leaveTypeId">
+        <label class="pl-1 mr-4">{{leaveType.typeName}}</label>
+        <span *ngIf="leaveType.id == 6"><input style="width: 1000px" formControlName="othersLeaveType"></span>
+        <br *ngIf="i == 4">
+      </span>
+          <p class="mt-4">
+            <span class="mr-2">Comment (if any): </span> <input type="text" style="width: 1000px"
+                                                                formControlName="comment">
+          </p>
+        </form>
+      </div>
+      <div *ngIf="isApprovedByManagement">
+        <hr style="border: 1px solid #1e8aff">
+        <p class="mt-2"><b style="color: #456e37">Type of Leave:</b>
+          <span class="pl-3 pr-1">{{approvedFormData.leaveType.typeName}}</span>
+          <span *ngIf="approvedFormData.leaveType.id == 6">( {{approvedFormData.othersLeaveType}} )</span>
+        </p>
+        <p class="mt-2"><b>Comment:</b>
+          <span class="pl-2">{{approvedFormData.comment}}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+

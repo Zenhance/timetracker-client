@@ -1,0 +1,332 @@
+@import '~handsontable/dist/handsontable.full.css';
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+body {
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+input.pull-left.ng-scope.ng-pristine.ng-valid {
+    margin-left: 15px !important;
+    margin-top: 4px;
+}
+
+
+.template-container {
+    position: relative;
+    top: 51px;
+    left: 0;
+    width: 100%;
+}
+
+nav.navbar {
+    margin-bottom: 0;
+}
+
+.user-dropdown-box, .user-dropdown li {
+    cursor: pointer;
+}
+
+.row-no-gutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.flat, .modal-content {
+    -ms-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.modal-content-divider {
+    margin: 20px -20px;
+    border-color: #e5e5e5;
+}
+
+*, *:focus, *:enabled, *:active, *:enabled {
+    outline: none !important;
+}
+
+.modal-footer {
+    padding: 15px;
+}
+
+/*---------------------------------------- START Report View ------------------------------------------*/
+.report-view, .report-details-view, .admin-view {
+    margin: 0px 25px;
+}
+
+.option-bar {
+    margin: 15px 25px;
+}
+
+.option-panel {
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 75px;
+    background-color: white;
+    position: fixed;
+    z-index: 800;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.option-buttons > button {
+    margin-left: 5px;
+}
+
+.table-container {
+    margin: 0 25px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.loading-spinner {
+  margin-top: 50px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.report-table.table > tbody > tr {
+    height: 150px;
+    border-bottom: 45px solid #ffffff;
+}
+
+.report-table.table > tbody > tr > td:not(:first-child) {
+    width: 205px;
+    height: 150px;
+}
+
+.report-table.table > tbody > tr > td {
+    box-sizing: border-box;
+    padding: 3px;
+    height: 100px;
+}
+
+.diary-hour {
+    margin-right: 4px;
+    width: 3%;
+    text-align: center;
+    vertical-align: middle !important;
+    background-color: #f0f0f0;
+}
+
+.diary-title-holder {
+
+    height: 12%;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-left: 2px;
+    color: #ffffff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.title-found {
+    background-color: #5cb85c;
+}
+
+.manual-entry {
+    background-color: #F49733;
+}
+
+.title-found span {
+    overflow: hidden;
+}
+
+.screenshot-holder {
+    height: 50%;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px dashed #C3C3C3;
+    background-color: #F2F2F2;
+
+}
+
+.screenshot-thumbnail {
+    cursor: pointer;
+}
+
+.img-full-container {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.diary-details {
+    height: auto;
+    font-size: 13px;
+    position: static;
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+    .diary-details span {
+        margin-top: 2px;
+    }
+
+.list-group-horizontal .slot-minute-box, .list-group-horizontal .list-item {
+    display: inline-block;
+}
+
+.slot-minute-list {
+    position: static;
+    right: 0;
+    top: 0;
+    background-color: transparent;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.slot-minute-box {
+    height: 7px;
+    width: 7px;
+    background-color: #c3c3c3;
+    margin-right: 1px;
+    border-radius: 50%;
+}
+
+.slot-minute-used {
+    background-color: #5cb85c;
+}
+
+.total-time-box {
+    background-color: #1e8aff;
+}
+
+
+.modal-content-divider {
+    margin: 20px -20px;
+    border-color: #e5e5e5;
+}
+
+.alert.flat {
+    margin: 10px 0;
+}
+
+.info-badge {
+    margin: 0;
+}
+
+.info-badge-container ul li {
+    background-color: #eeeeee;
+    margin-right: 5px;
+    padding: 10px;
+}
+
+.nav > li > a.info-badge {
+    background-color: #eeeeee;
+}
+
+a.info-badge .label {
+    vertical-align: text-bottom;
+    font-size: 21px;
+}
+
+.admin-selected-user {
+    display: inline-block;
+    box-sizing: border-box;
+    border: 2px solid #1E8AFF;
+    padding: 5px 10px;
+    background-color: #288FFE;
+    color: white;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    margin: 4px 2px;
+    line-height: normal;
+}
+
+.pull-left {
+    float: left !important;
+    margin-left: 2px;
+}
+
+.pull-right button {
+    margin-right: 5px;
+}
+
+/*---------------------------------------- END Report View --------------------------------------------*/
+
+/*---------------------------------------- START Report Details View -----------------------------------*/
+
+/*.table-container {
+    overflow: auto;
+    margin-bottom: 20px;
+}*/
+
+.report-details-table.table > thead > tr > th,
+.report-details-table.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.ho-table-box {
+    margin: 10px 25px;
+}
+
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*---------------------------------------- END Report Details View -----------------------------------*/
+
+/*---------------------------------------- START Admin View ------------------------------------------*/
+
+
+
+/*---------------------------------------- END Admin View ------------------------------------------*/

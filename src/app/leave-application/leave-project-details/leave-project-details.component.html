@@ -1,0 +1,87 @@
+<div class="button-section mt-3" *ngIf="editable==true">
+  <button class="btn btn-info btn-sm ml-2" (click)="onAddRow()"> + Add Row</button>
+</div>
+<div *ngIf="editable==true" class="table-section mt-2">
+  <form [formGroup]="projectDetailsForm">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th style="width: 20%">Project Name</th>
+        <th style="width: 30%">Responsibility</th>
+        <th style="width: 20%">Substitute</th>
+        <th style="width: 20%">Project Manager</th>
+        <th style="width: 10%"></th>
+      </tr>
+      </thead>
+      <tbody formArrayName="projectDetails" *ngFor="let item of formArray.controls; let i=index">
+      <tr [formGroupName]="i">
+
+        <td>
+          <select style="width: 90%" class="custom-select" formControlName="project">
+            <option value="">Select project</option>
+            <option *ngFor="let project of assignedProjects" [value]="project.projectId">{{project.name}}</option>
+          </select>
+        </td>
+        <td>
+          <input type="text" style="width:100%; height: 40px" formControlName="responsibility">
+        </td>
+        <td>
+          <select class="custom-select" formControlName="substitute">
+            <option value="">Choose Substitute</option>
+            <option *ngFor="let user of userList" [value]="user.userName">{{user.name}}</option>
+          </select>
+        </td>
+        <td>
+          <select style="width: 90%;" class="custom-select" formControlName="projectManager">
+            <option value="">Select Project Manager</option>
+            <option *ngFor="let user of userList" [value]="user.userName">{{user.name}}</option>
+          </select>
+
+        </td>
+        <td *ngIf="editable==true">
+          <button class="btn btn-sm btn-danger" type="button"
+                  placement="top" ngbTooltip="Remove"
+                  (click)="onDeleteRow(i)">
+            <i class="fa fa-trash-o"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div *ngIf="editable==false" class="table-section mt-2">
+  <table class="table table-striped mt-3" >
+    <thead>
+    <tr>
+      <th>Project Name</th>
+      <th>Responsibility</th>
+      <th>Substitute</th>
+      <th>Project Manager</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of this.projectDetailsData">
+      <td>
+        <span *ngIf="projectList">{{getProjectName(item.project)}}</span>
+      </td>
+      <td>
+        {{item.responsibility}}
+      </td>
+      <td>
+        <span style="margin-right: 5px">{{item.substituteName }}</span>
+        <span *ngIf="item.substituteApprovalStatus=='Pending'" class="badge badge-secondary">{{item.substituteApprovalStatus}}</span>
+        <span *ngIf="item.substituteApprovalStatus=='Accepted'" class="badge badge-success">{{item.substituteApprovalStatus}}</span>
+        <span *ngIf="item.substituteApprovalStatus=='Rejected'" class="badge badge-danger">{{item.substituteApprovalStatus}}</span>
+      </td>
+      <td>
+        <span style="margin-right: 5px">{{item.projectManagerName}}</span>
+        <span *ngIf="item.projectManagerApprovalStatus=='Pending'" class="badge badge-secondary">{{item.projectManagerApprovalStatus}}</span>
+        <span *ngIf="item.projectManagerApprovalStatus=='Accepted'" class="badge badge-success">{{item.projectManagerApprovalStatus}}</span>
+        <span *ngIf="item.projectManagerApprovalStatus=='Rejected'" class="badge badge-danger">{{item.projectManagerApprovalStatus}}</span>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+</div>

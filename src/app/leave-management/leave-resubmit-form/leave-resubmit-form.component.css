@@ -1,0 +1,13 @@
+.applicationForm-container {
+  margin: 5px 0% 5px 1%;
+}
+
+.form-header {
+  text-align: center;
+  color: darkgreen;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+.date-picker:hover {
+  cursor: pointer;
+}

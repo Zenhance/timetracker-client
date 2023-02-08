@@ -1,0 +1,50 @@
+<nav class="navbar navbar-light bg-light border-bottom fixed-top">
+    <div class="container-fluid" style="margin: 0 25px; padding: 0 15px;">
+        <a class="navbar-brand" href="#">
+            <img  [src]="timeTrackerLogo()">
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid template-container">
+    <div id="loginbox" class="col-lg-3 col-md-5 offset-md-4">
+
+        <div class="card" style="margin-top: 50px;">
+            <h6 class="card-header">
+                Sign In
+            </h6>
+            <div class="card-body row">
+                <div class="col-12">
+                    <div *ngIf="showError" class="alert alert-danger" role="alert">
+                        Invalid username or password!
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="inlineFormInputGroup1">Username</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa fa-user fa-fw" aria-hidden="true"></i></div>
+                          </div>
+                          <input [(ngModel)]="userCredential.UserId" type="text" class="form-control" id="inlineFormInputGroup1" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="inlineFormInputGroup2">Password</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa fa-key fa-fw" aria-hidden="true"></i></div>
+                          </div>
+                          <input [(ngModel)]="userCredential.Password" type="password" class="form-control" id="inlineFormInputGroup2" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input [(ngModel)]="userCredential.RememberMe" type="checkbox" class="custom-control-input" id="customCheck1">
+                        <label class="custom-control-label" for="customCheck1">Remember Me</label>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 20px;" (click)="authenticate()" [disabled]="disableLoginButton">
+                       Login
+                    </button>
+                </div>
+            </div>
+          </div>
+    </div>
+</div>

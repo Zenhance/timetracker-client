@@ -1,0 +1,26 @@
+<tt-header></tt-header>
+<div class="calendar-container">
+  <tt-leave-calendar-header [(view)]="view" [(viewDate)]="viewDate"></tt-leave-calendar-header>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="'month'"
+      [viewDate]="viewDate"
+      [events]="leaveEvents"
+      [activeDayIsOpen]="true"
+      (beforeViewRender)="beforeViewRender($event)"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="'week'"
+      [viewDate]="viewDate"
+      [events]="leaveEvents"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="'day'"
+      [viewDate]="viewDate"
+      [events]="leaveEvents"
+    >
+    </mwl-calendar-day-view>
+  </div>
+</div>

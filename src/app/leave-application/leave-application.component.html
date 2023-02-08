@@ -1,0 +1,109 @@
+<div class="applicationForm-container" *ngIf="userInfo">
+  <!--  <div class="form-header">-->
+  <!--    Leave Application-->
+  <!--  </div>-->
+  <div class=" mb-3">
+    <button class="btn btn-sm btn-primary" (click)="onFormSubmit()">
+      Submit Application
+    </button>
+  </div>
+  <div class="form-content">
+    <form [formGroup]="leaveForm">
+      <div class="row">
+        <div class="col-md-4">
+          <div><b style="padding-right: 4px">Name: </b> {{userInfo.name}} </div>
+          <div><b style="padding-right: 4px">Employee ID: </b> {{userInfo.employeeNo}} </div>
+          <div class="mt-1">
+            <b style="padding-right: 4px">Designation: </b>
+            <input type="text" formControlName="designation">
+          </div>
+          <div class="mt-1">
+            <b style="padding-right: 4px">Mobile: </b>
+            <input type="tel" formControlName="mobile">
+          </div>
+
+        </div>
+        <div class="col-md-5">
+          <div>
+          <span>
+            <b style="padding-right: 4px">Leave From </b>
+            <input
+              placeholder="yyyy-mm-dd" formControlName="leaveStartDate"
+              type="hidden"
+              name="date_leave_start"
+              (dateSelect)="setLeaveStartDate()"
+              ngbDatepicker #dfrom="ngbDatepicker"
+            >
+            <button class="btn btn-outline-secondary btn-sm" (click)="dfrom.toggle()" type="button">
+              <i class="fa fa-calendar fa-fw"></i>
+              <span class="p-3">{{leaveStartDate | date}}</span>
+            </button>
+          </span>
+            <span class="pl-2">
+            <b style="padding-right: 4px">To </b>
+            <input
+              placeholder="yyyy-mm-dd" formControlName="leaveEndDate"
+              type="hidden"
+              name="date_leave_end"
+              (dateSelect)="setLeaveEndDate()"
+              ngbDatepicker #dto="ngbDatepicker"
+            >
+            <button class="btn btn-outline-secondary btn-sm" (click)="dto.toggle()" type="button">
+              <i class="fa fa-calendar fa-fw"></i>
+              <span class="p-4">{{leaveEndDate | date}}</span>
+            </button>
+          </span>
+          </div>
+
+          <div class="pt-2">
+          <span>
+            <b style="padding-right: 4px">No of Days: </b>
+            <input type="number" style="width: 40%; padding-left: 8px" formControlName="leaveDayCount">
+          </span>
+          </div>
+          <div class="pt-2">
+            <b style="padding-right: 4px">Rejoin Date: </b>
+            <input
+              placeholder="yyyy-mm-dd" formControlName="rejoinDate"
+              type="hidden"
+              name="date_rejoin"
+              (dateSelect)="setLeaveRejoinDate()"
+              ngbDatepicker #dreJoin="ngbDatepicker"
+            >
+            <button class="btn btn-outline-secondary btn-sm" (click)="dreJoin.toggle()" type="button">
+              <i class="fa fa-calendar fa-fw"></i>
+              <span class="p-4">{{leaveRejoinDate | date}}</span>
+            </button>
+          </div>
+
+        </div>
+        <div class="col-md-3">
+          <div class="pb-2">
+            <b style="padding-right: 18px">Purpose of Leave: </b>
+            <input style="width: 100%" formControlName="leavePurpose">
+          </div>
+
+          <div><b style="padding-right: 4px">Out of Station: </b>
+            <span>
+            <input type="radio" formControlName="outOfStation" value="1">
+            <label class="pl-1">Yes</label>
+          </span>
+            <span class="pl-2">
+            <input type="radio" formControlName="outOfStation" value="0">
+            <label class="pl-1">No</label>
+          </span>
+
+          </div>
+          <div><b style="padding-right: 4px">Location: </b>
+            <input type="text" style="width: 60%" formControlName="location">
+          </div>
+        </div>
+      </div>
+    </form>
+    <tt-leave-project-details *ngIf="editable==true"
+                              [userName]="userName"
+                              [editable]="true"
+                              [projectDetailsData]="null"
+                              (component)="getChildComponent($event)"></tt-leave-project-details>
+  </div>
+</div>

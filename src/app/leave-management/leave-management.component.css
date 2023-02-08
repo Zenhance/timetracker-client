@@ -1,0 +1,25 @@
+.applicationForm-container {
+  margin: 70px 5% 5px 5%;
+}
+.nav-link {
+  color: black;
+}
+.nav-link.active {
+  color: #007bff;
+  border-bottom: 1px solid #007bff;
+}
+.notification-text-accept {
+  color: #456e37;
+}
+.notification-text-reject {
+  color: darkred;
+}
+.notification-text-accept:hover {
+  color: #007bff !important;
+}
+.notification-text-reject:hover {
+  color: #007bff !important;
+}
+.notification-text:hover {
+  cursor: pointer;
+}

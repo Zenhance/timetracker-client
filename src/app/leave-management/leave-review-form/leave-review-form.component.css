@@ -1,0 +1,10 @@
+.applicationForm-container {
+  margin: 5px 0% 5px 1%;
+}
+
+.review-status-accept{
+  color: darkgreen; font-size: larger;
+}
+.review-status-reject{
+  color: darkred; font-size: larger;
+}

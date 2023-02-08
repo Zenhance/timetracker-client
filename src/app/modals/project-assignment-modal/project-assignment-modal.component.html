@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h4 class="modal-title">Project Assignment</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <p style="font-weight: bold;">
+          Work Day: <span style="font-weight: lighter;">{{ projectAssignmentModel.workDay }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div *ngIf="projectAssignmentModel.assignments.length == 0" class="col-12" style="text-align: center;">
+        <p>No tasks available</p>
+      </div>
+      <div *ngIf="projectAssignmentModel.assignments.length != 0" class="col-12">
+        <table class="table border">
+          <thead>
+            <tr>
+              <th scope="col">Task</th>
+              <th scope="col">Project</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let assignment of projectAssignmentModel.assignments">
+              <td>{{ assignment.taskDescription }}</td>
+              <td>
+                <select [(ngModel)]="assignment.projectId" class="custom-select">
+                  <option *ngFor="let project of projectAssignmentModel.assignedProjects"  
+                          [value]="project.projectId">
+                    {{ project.name }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-primary" 
+            (click)="assignProjects()" 
+            [disabled]="projectAssignmentModel.assignments.length == 0">Save</button>
+    <button class="btn btn-outline-danger" (click)="activeModal.close('Close click')">Cancel</button>
+</div>
